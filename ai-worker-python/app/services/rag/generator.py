@@ -86,7 +86,7 @@ class LLMGenerator:
 
         best = citations[0]
         # Kiểm tra ngưỡng tương đồng tối thiểu (Relevance Threshold) để chống trả lời bừa khi câu hỏi lạc đề
-        if best.relevance_score < 0.55:
+        if best.relevance_score < 0.15:
             return "Tài liệu được cung cấp không chứa thông tin liên quan đến câu hỏi này."
 
         summary = (
