@@ -46,7 +46,8 @@ OCR_RAG_FastAPI/
 │   ├── 02-so-sanh-va-lua-chon-cong-nghe-ocr.md
 │   ├── 03-chuyen-sau-rag-cho-tai-lieu-ocr.md
 │   ├── 04-kien-truc-fastapi-va-backend.md
-│   └── 05-lo-trinh-trien-khai-tung-buoc.md
+│   ├── 05-lo-trinh-trien-khai-tung-buoc.md
+│   └── 06-giao-dien-web-frontend-boundingbox-va-chat.md
 │
 ├── docker-compose.yml          # Cấu hình chạy toàn bộ hệ thống bằng Docker
 └── README.md                   # Tài liệu hướng dẫn chung
@@ -59,25 +60,22 @@ OCR_RAG_FastAPI/
 Để hiểu rõ **"Tại sao phải làm vậy?"**, **"Còn cách nào khác không?"**, và **"Ưu nhược điểm từng giải pháp là gì?"**, hãy xem các tài liệu hướng dẫn chuyên sâu:
 
 1. [01. Tổng quan kiến trúc hệ thống](learning/01-tong-quan-kien-truc-he-thong.md)
-2. [02. So sánh và lựa chọn công nghệ OCR](learning/02-so-sanh-va-lua-chon-cong-nghe-ocr.md)
+2. [02. So sánh và lựa chọn công nghệ OCR & Bounding Box](learning/02-so-sanh-va-lua-chon-cong-nghe-ocr.md)
 3. [03. Chuyên sâu RAG cho tài liệu OCR](learning/03-chuyen-sau-rag-cho-tai-lieu-ocr.md)
 4. [04. Kiến trúc FastAPI và mô hình Backend](learning/04-kien-truc-fastapi-va-backend.md)
 5. [05. Lộ trình triển khai từng bước](learning/05-lo-trinh-trien-khai-tung-buoc.md)
+6. [06. Giao diện Web Frontend, Bounding Box tương tác & Chat RAG](learning/06-giao-dien-web-frontend-boundingbox-va-chat.md)
 
 ---
 
 ## 🚀 Khởi Động Nhanh (Quick Start)
 
-### 1. Cài đặt môi trường AI Worker (Python):
+### 1. Khởi chạy FastAPI Server:
 ```powershell
 cd ai-worker-python
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+.\.venv\Scripts\uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2. Chạy FastAPI Server:
-```powershell
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-Truy cập tài liệu API tự động tại: `http://localhost:8000/docs`
+### 2. Trải nghiệm hệ thống:
+* 💻 **Giao diện Web Trực quan (Drag & Drop, Bounding Box, Chat):** Truy cập [http://localhost:8000/app](http://localhost:8000/app)
+* 📑 **Tài liệu API tương tác (Swagger UI):** Truy cập [http://localhost:8000/docs](http://localhost:8000/docs)
