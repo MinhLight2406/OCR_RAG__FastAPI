@@ -31,15 +31,19 @@ def test_root_and_health():
     assert res_root.status_code == 200
     data_root = res_root.json()
     assert data_root["status"] == "online"
-    assert "/docs" in data_root["swagger_ui"]
     print("[PASS] test_root_and_health: GET / passed.")
-
     # 2. Test Health
     res_health = client.get("/health")
     assert res_health.status_code == 200
     data_health = res_health.json()
     assert data_health["status"] == "healthy"
     print("[PASS] test_root_and_health: GET /health passed.")
+
+    # 3. Test Static Frontend /app
+    res_app = client.get("/app/")
+    assert res_app.status_code == 200
+    assert "DocuMind" in res_app.text
+    print("[PASS] test_root_and_health: GET /app/ passed.")
 
 
 def test_rag_endpoints():

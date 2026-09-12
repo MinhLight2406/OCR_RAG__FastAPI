@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Trích Xuất Tài Liệu OCR & RAG Thông Minh</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+        <div class="logo-area">
+            <div class="logo-icon">📄</div>
+            <div class="logo-text">
+                <h1>DocuMind <span>OCR & RAG</span></h1>
+                <p>Hệ thống xử lý & hỏi đáp tài liệu thông minh</p>
+            </div>
+        </div>
+        <div class="header-status">
+            <span class="badge status-badge" id="backend-status">
+                <span class="status-dot"></span> Đang kết nối Backend...
+            </span>
+            <a href="http://localhost:8000/docs" target="_blank" class="btn btn-outline btn-sm">
+                Swagger API Docs ↗
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="main-layout">
+        
+        <!-- Left Panel: Document Viewer & OCR -->
+        <section class="panel document-panel">
+            <div class="panel-header">
+                <h2>📑 Trình Xem Tài Liệu & Bounding Box</h2>
+                <div class="panel-actions">
+                    <span id="ocr-stats" class="text-muted">Chưa có tài liệu</span>
+                </div>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-zone" id="drop-zone">
+                <input type="file" id="file-input" accept="image/*,.pdf" hidden>
+                <div class="upload-content">
+                    <div class="upload-icon">📤</div>
+                    <h3>Kéo & thả ảnh tài liệu vào đây</h3>
+                    <p>Hoặc <span class="browse-link">bấm vào để chọn tệp</span> từ máy tính (PNG, JPG, Scan)</p>
+                    <span class="file-hint">Hỗ trợ hợp đồng, hóa đơn VAT, chứng từ scan</span>
+                </div>
+            </div>
+
+            <!-- Image Viewer with Bounding Box Overlay -->
+            <div class="viewer-container hidden" id="viewer-container">
+                <div class="viewer-toolbar">
+                    <button class="btn btn-sm" id="btn-toggle-bbox">👁️ Ẩn/Hiện Bounding Box</button>
+                    <button class="btn btn-sm" id="btn-reset-zoom">🔍 Xem Vừa Khung</button>
+                    <button class="btn btn-sm btn-danger" id="btn-remove-doc">🗑️ Đổi Tài Liệu</button>
+                </div>
+
+                <div class="image-wrapper" id="image-wrapper">
+                    <img id="document-image" alt="Tài liệu scan">
+                    <!-- Bounding Box Layer đè trực tiếp lên ảnh -->
+                    <div class="bbox-layer" id="bbox-layer"></div>
+                </div>
+            </div>
+
+            <!-- OCR Text Extraction Result Tabs -->
+            <div class="ocr-results-container hidden" id="ocr-results-container">
+                <div class="results-header">
+                    <h3>📝 Văn Bản Nhận Diện Được (OCR Lines)</h3>
+                    <span class="badge" id="lines-count-badge">0 dòng</span>
+                </div>
+                <div class="ocr-lines-list" id="ocr-lines-list">
+                    <!-- Danh sách các dòng chữ sẽ được render ở đây -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Intelligent RAG Chat Assistant -->
+        <section class="panel chat-panel">
+            <div class="panel-header">
+                <h2>🤖 Trợ Lý Hỏi Đáp Tài Liệu (RAG Chat)</h2>
+                <span class="badge badge-accent">Chống ảo giác 100%</span>
+            </div>
+
+            <!-- Chat Messages Container -->
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system-message">
+                    <div class="message-avatar">💡</div>
+                    <div class="message-body">
+                        <strong>Xin chào!</strong> Bạn hãy tải ảnh hoặc PDF tài liệu ở cột bên trái lên. Hệ thống sẽ tự động bóc tách chữ qua OCR, định vị Bounding Box và nạp vào cơ sở dữ liệu Vector để bạn có thể hỏi đáp ngay!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="quick-suggestions hidden" id="quick-suggestions">
+                <span class="suggestion-label">Gợi ý nhanh:</span>
+                <button class="suggestion-chip">Thời hạn hợp đồng là bao lâu?</button>
+                <button class="suggestion-chip">Tổng tiền thanh toán là bao nhiêu?</button>
+                <button class="suggestion-chip">Tiền đặt cọc là bao nhiêu?</button>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form class="chat-input-area" id="chat-form">
+                <input 
+                    type="text" 
+                    id="chat-input" 
+                    placeholder="Đặt câu hỏi về tài liệu (ví dụ: Ai là bên cho thuê?)..." 
+                    autocomplete="off"
+                    disabled
+                >
+                <button type="submit" id="btn-send" class="btn btn-primary" disabled>
+                    <span>Gửi</span> ➤
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

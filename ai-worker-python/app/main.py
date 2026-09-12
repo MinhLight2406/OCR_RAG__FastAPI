@@ -34,6 +34,9 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+
 # 1. Cấu hình CORS Middleware (Cho phép Frontend kết nối từ bất kỳ port nào)
 app.add_middleware(
     CORSMiddleware,
@@ -48,6 +51,11 @@ app.include_router(ocr_router, prefix="/api/v1")
 app.include_router(rag_router, prefix="/api/v1")
 app.include_router(documents_router, prefix="/api/v1")
 
+# 3. Phục vụ Giao diện Web Frontend tại /app
+frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
+if frontend_dir.exists():
+    app.mount("/app", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
+
 
 @app.get("/", summary="Trang chủ API & Bản đồ các Endpoints")
 async def root():
@@ -59,7 +67,9 @@ async def root():
             "status": "online",
             "swagger_ui": "/docs",
             "redoc_ui": "/redoc",
+            "web_ui": "/app",
             "available_endpoints": {
+                "web_frontend": "GET /app",
                 "ocr_extract": "POST /api/v1/ocr/extract",
                 "ocr_and_ingest": "POST /api/v1/ocr/extract-and-ingest",
                 "rag_ingest": "POST /api/v1/rag/ingest",
