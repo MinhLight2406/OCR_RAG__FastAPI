@@ -46,7 +46,7 @@ class LightweightEmbedding(BaseEmbedding):
       tính Dot Product ra chính xác Cosine Similarity.
     """
 
-    def __init__(self, dimension: int = 128):
+    def __init__(self, dimension: int = 256):
         self._dim = dimension
 
     @property
@@ -60,23 +60,21 @@ class LightweightEmbedding(BaseEmbedding):
 
         vector = [0.0] * self._dim
 
-        # 1. Tính tần suất từ và n-gram
+        # 1. Tính tần suất từ đơn (Unigram)
         for token in tokens:
             h = int(hashlib.md5(token.encode("utf-8")).hexdigest(), 16)
             idx = h % self._dim
-            sign = 1.0 if ((h >> 8) & 1) == 0 else -1.0
-            vector[idx] += sign
+            vector[idx] += 1.0
 
-        # N-gram 2 từ liên tiếp để bắt ngữ cảnh liền kề
+        # 2. N-gram 2 từ liên tiếp (Bigram) với trọng số cao hơn để bắt ngữ cảnh
         for i in range(len(tokens) - 1):
             bigram = f"{tokens[i]}_{tokens[i+1]}"
             h = int(hashlib.md5(bigram.encode("utf-8")).hexdigest(), 16)
             idx = h % self._dim
-            sign = 1.5 if ((h >> 8) & 1) == 0 else -1.5
-            vector[idx] += sign
+            vector[idx] += 2.0
 
-        # 2. Chuẩn hóa L2 (L2 Normalization): ||V|| = 1.0
-        # Đảm bảo vector nằm trên mặt cầu đơn vị để Cosine Similarity = Dot Product
+        # 3. Chuẩn hóa L2 (L2 Normalization): ||V|| = 1.0
+        # Đảm bảo vector nằm trên mặt cầu đơn vị để Cosine Similarity = Dot Product trong dải [0.0, 1.0]
         norm = math.sqrt(sum(x * x for x in vector))
         if norm > 1e-9:
             vector = [x / norm for x in vector]

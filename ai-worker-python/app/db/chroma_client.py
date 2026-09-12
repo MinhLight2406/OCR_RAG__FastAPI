@@ -40,7 +40,7 @@ class InMemoryVectorDB:
 
             # Tính Cosine Similarity (Dot Product vì vector đã chuẩn hóa L2)
             dot_product = sum(a * b for a, b in zip(query_vector, emb))
-            sim_score = max(0.0, min(1.0, (dot_product + 1.0) / 2.0))  # Quy đổi về thang [0, 1]
+            sim_score = max(0.0, min(1.0, dot_product))  # Lấy trực tiếp độ tương đồng Cosine dương
             scores.append((sim_score, chunk))
 
         # Sắp xếp giảm dần theo điểm tương đồng
